@@ -652,7 +652,9 @@ class ProcessMgr():
         paste_face = cv2.warpAffine(upsk_face, IM, (target_img.shape[1], target_img.shape[0]), borderMode=cv2.BORDER_REPLICATE)
         if upsk_face is not fake_face:
             fake_face = cv2.warpAffine(fake_face, IM, (target_img.shape[1], target_img.shape[0]), borderMode=cv2.BORDER_REPLICATE)
-            paste_face = cv2.addWeighted(paste_face, self.options.blend_ratio, fake_face, 1.0 - self.options.blend_ratio, 0)
+            paste_face = paste_face.astype(np.float32)
+            fake_face = fake_face.astype(np.float32)
+            paste_face = cv2.addWeighted(paste_face, self.options.blend_ratio, fake_face, 1.0 - self.options.blend_ratio, 0,dtype=cv2.CV_32F)
 
         # Re-assemble image
         paste_face = img_matte * paste_face
